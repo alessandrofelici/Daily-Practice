@@ -2,22 +2,24 @@
 
 def isValid(s: str) -> bool:
   stack = []
-  openToClose = {
-    "{" : "}",
-    "[" : "]",
-    "(" : ")"
+  closeToOpen = {
+    "}" : "{",
+    "]" : "[",
+    ")" : "("
   }
   for c in s:
-    # 
-    if s.find(openToClose(c)) != -1:
-      
-      # other half not in string
-        # was removed already
-        # doesnt exist
+    if c in closeToOpen:
+      if stack and stack[-1] == closeToOpen[c]:
+        stack.pop()
+      else:
+        return False
+    else:
+      stack.append(c)
+  
+  return True
 
-    # other half is in string
 
 
 
-print(isValid("{[]}"))
+print(isValid("{(}"))
 
