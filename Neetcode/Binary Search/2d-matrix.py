@@ -5,12 +5,12 @@ class Solution:
 
         while lo <= hi:
             mid = (lo + hi) // 2
-            if target > matrix[mid][lastCol]:
-                lo = mid + 1
-            if target < matrix[mid][lastCol]:
-                hi = mid - 1
             if target <= matrix[mid][lastCol] and target >= matrix[mid][0]:
                 return self.binarySearch(matrix[mid], target) != -1
+            if target > matrix[mid][lastCol]:
+                lo = mid + 1
+            if target < matrix[mid][0]:
+                hi = mid - 1
             
         return False
 
