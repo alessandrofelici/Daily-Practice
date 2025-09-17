@@ -14,20 +14,26 @@ class Solution:
             next_node = next_node.next
         
         # also get half point
-        mid_node = head.next
-        for i in range(length/2):
-            mid_node = next_node.next
+        mid_node = head
+        for i in range(length//2):
+            temp = mid_node.next
+            if i == length//2 - 1:
+                mid_node.next = None
+            mid_node = temp
         mid_node = self.reverseList(mid_node)
         
         # split list (1, n/2) & (n/2 + 1, n-1)
-        first_node = head.next
-        for i in range(length):
-            new1 = ListNode(mid_node.val, first_node)
-            if mid_node.next:
-              new2 = ListNode(first_node.val, mid_node.next)
-            else:
-              new2 = ListNode(first_node.val, None)
+        for i in range(length//2):
+            temp1 = head.next
+            temp2 = mid_node.next
+            mid_node.next = head.next
+            if length%2 != 0 and i == length//2 - 1:
+                mid_node.next = temp2
+            head.next = mid_node
+            head = temp1
+            mid_node = temp2
 
+        
         # reverse l2
 
         # while
