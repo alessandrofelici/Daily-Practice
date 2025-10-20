@@ -1,28 +1,19 @@
 class Solution:
     def lengthOfLongestSubstring(self, s: str) -> int:
-        if len(s) == 0:
-            return 0
-
-        maxLen, currLen, beginning = 0, 0, 0
-        prev = s[0]
-        hash = {}
         
-        for index, char in enumerate(s):
-            if char in hash and hash[char] >= beginning:
-                maxLen = max(maxLen, currLen)
-                beginning = hash[char] + 1
-                currLen = index - beginning
-                print(currLen)
-                del hash[char]
-            if prev == char:
-                currLen = 0
-            hash[char] = index
-            currLen += 1
-            print(hash, currLen)
-            prev = char
+        l, r = 0, 0
+        longest = 0
+        charSet = set()
 
-        return max(maxLen, currLen)
+        while r < len(s):
+            while s[r] in set:
+                charSet.remove(s[l])
+                l += 1
+            
+            charSet.add(s[r])
 
-sol = Solution()
-print(sol.lengthOfLongestSubstring("aaca"))
-# print(sol.lengthOfLongestSubstring("thequickbrownfoxjumpsoverthelazydogthequickbrownfoxjumpsovert"))
+            longest = max(longest, r - l + 1)
+
+            r += 1
+
+        return longest
