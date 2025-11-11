@@ -1,4 +1,4 @@
-def day1(input: str):
+def sol(input: str):
   count, pos = 0, 1
 
   for c in input:
@@ -7,6 +7,7 @@ def day1(input: str):
     else:
       count -= 1
     
+    # Part 2
     if count == -1:
       return pos
     
