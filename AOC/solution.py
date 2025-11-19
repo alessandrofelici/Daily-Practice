@@ -1,7 +1,7 @@
 import importlib.util
 
 # ***** CHANGE ME *****
-path = "D:/GitHub/Daily-Practice/AOC/2015/day3.py"
+path = "D:/GitHub/Daily-Practice/AOC/2015/day4.py"
 mname = "mod"
 
 # Load module from specified file location
