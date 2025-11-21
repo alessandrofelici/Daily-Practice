@@ -29,7 +29,7 @@ def to_grid(grid, arr, integer):
 #####                 Start Here                  #####
 #######################################################
 
-array = load_file("../input.txt")
+array = load_file("AOC\util\input.txt")
 total = 0
 
 grid = []
