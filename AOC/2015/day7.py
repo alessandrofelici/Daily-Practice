@@ -32,78 +32,40 @@ def to_grid(grid, arr, integer):
 array = load_file("AOC/util/input.txt")
 total = 0
 
-grid = []
+instructions = {}
+results = {}
+
+def readInstr(line):
+    instr, Rd = line.split(' -> ')
+    instructions[Rd] = instr
+
+def calculate(register):
+    if register.isdigit():
+        return int(register)
+
+    instr = instructions[register]
+    res = instr.split(' ')
+
+    if register not in results:
+        if len(res) == 1: # number -> destination
+            res = calculate(res[0])
+        elif len(res) == 2: # NOT
+            res = ~calculate(res[1]) & 0xffff
+        elif res[1] == 'AND':
+            res = calculate(res[0]) & calculate(res[2])
+        elif res[1] == 'OR':
+            res = calculate(res[0]) | calculate(res[2])
+        elif res[1] == 'RSHIFT':
+            res = calculate(res[0]) >> calculate(res[2])
+        elif res[1] == 'LSHIFT':
+            res = calculate(res[0]) << calculate(res[2])
+        
+        results[register] = res
+    return results[register]
+
+
 for line in array:
-    to_grid(grid, line, False)
+    readInstr(line)
 
-vals = {}
-
-def getVariable(line):
-    return line[len(line) - 2]
-
-def sepVars(line):
-    vars = []
-    curr = ''
-    for c in line:
-        if c == ' ':
-            vars.append(curr)
-            curr = ''
-            continue
-        elif c == '-':
-            break
-        curr += c
-    while (len(vars) < 3):
-        vars.append('')
-
-    return vars
-
-def computeVal(line):
-    # take phrase before arrow
-    first, op, last = sepVars(line)
-
-    # turn to string
-    s = ''.join(line)
-    assignTo = getVariable(s)
-
-    # no operator exists
-    if op == '':
-        if first[0].isdigit():
-          vals[assignTo] = int(first)
-        elif first in vals:
-          vals[assignTo] = int(vals[first])
-        return
-    
-    # operator exists: one var
-    if last == '':
-        # not assigned yet
-        if op not in vals:
-            return
-        # note first is op and op is the variable
-        vals[assignTo] = ~bin(vals[op])
-        return
-    
-    if last not in vals:
-        # not assigned yet
-        return
-    
-    # operator exists: two var
-    first = bin(vals[first])
-    last = bin(vals[last])
-    if 'AND' == op:
-        vals[assignTo] = first & last
-    elif 'OR' == op:
-        vals[assignTo] = first | last
-    elif 'LSHIFT' == op:
-        vals[assignTo] = first << last
-    elif 'RSHIFT' == op:
-        vals[assignTo] = first >> last
-    elif 'NOT' == op:
-        vals[assignTo] = ~last
-
-for line in grid:
-    computeVal(line)
-           
-
-print(vals)
-
+total = calculate('a')
 result(total)
