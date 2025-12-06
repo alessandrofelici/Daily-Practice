@@ -30,52 +30,53 @@ def to_grid(grid, arr, integer):
 #######################################################
 
 array = load_file("AOC/util/input.txt")
-total = 0
+part1 = part2 = 0
 
 grid = []
 for line in array:
     to_grid(grid, line, False)
 
-def getVoltage(nums):
-    l, r = 0, len(nums) - 1
-    first, second = nums[l], nums[r]
+for i, line in enumerate(grid):
+    if not line:
+        ranges = grid[:i]
+        ids = grid[i+1:]
 
-    for i, num in enumerate(nums):
-        if num > first and i != r:
-            l = i
-            first = num
+# Part 2
+valid = []
 
-    while l < r:
-        second = max(second, nums[r])
-        r -= 1
-    
-    combined = first + second
-    return int(combined)
+for i in range(len(ranges)):
+    ranges[i] = list(map(int, ''.join(ranges[i]).split('-')))
 
-def part2(nums):
-    windowSize = 89
-    i = 0
-    while windowSize > 1:
-        hi = i
-        for j in range(i, i + windowSize):
-            if j == len(nums):
-                if hi == i:
-                    print(len(nums[:12]))
-                    return int(''.join(nums[:12]))
-                break
-            if nums[j] > nums[hi]:
-                hi = j
-        while hi != i and windowSize > 1:
-            nums.pop(i)
-            windowSize -= 1
-            hi -= 1
+ranges.sort(key=lambda x: x[0])
         
-        i += 1
-    
-    return int(''.join(nums))
+current_lo, current_hi = ranges[0]
+for new_lo, new_hi in ranges[1:]:
+    if new_lo <= current_hi + 1:
+        current_hi = max(current_hi, new_hi)
+    else:
+        valid.append([current_lo, current_hi])
+        current_lo, current_hi = new_lo, new_hi
+valid.append([current_lo, current_hi])
+            
+for pair in valid:
+    if not pair:
+        continue
+    part2 += pair[1] - pair[0] + 1
 
-for line in grid:
-    total += part2(line)
-    # print(total)
+# Part 1
+# for i in range(len(ids)):
+#     ids[i] = int(''.join(ids[i]))
 
-result(total)
+# def validate(id, range_):
+#     range_ = ''.join(range_)
+#     lo, hi = range_.split('-')
+#     lo, hi = int(lo), int(hi)
+#     return id >= lo and id <= hi
+
+# for range_ in ranges:
+#     for i, id in enumerate(ids):
+#       if ids[i] and validate(id, range_):
+#           part1 += 1
+#           ids[i] = None
+
+result(part2)

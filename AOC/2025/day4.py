@@ -36,46 +36,29 @@ grid = []
 for line in array:
     to_grid(grid, line, False)
 
-def getVoltage(nums):
-    l, r = 0, len(nums) - 1
-    first, second = nums[l], nums[r]
+def checkBounds(i, j, x, y):
+    return i >= 0 and i < x and j >= 0 and j < y
 
-    for i, num in enumerate(nums):
-        if num > first and i != r:
-            l = i
-            first = num
+def checkSurroundings(i, j, x, y):
+    count = 0
+    for k in range(i - 1, i + 2):
+        for l in range(j - 1, j + 2):
+            if (k != i or l != j) and checkBounds(k, l, x, y) and grid[k][l] == '@':
+                count += 1
+    return count < 4
 
-    while l < r:
-        second = max(second, nums[r])
-        r -= 1
-    
-    combined = first + second
-    return int(combined)
 
-def part2(nums):
-    windowSize = 89
-    i = 0
-    while windowSize > 1:
-        hi = i
-        for j in range(i, i + windowSize):
-            if j == len(nums):
-                if hi == i:
-                    print(len(nums[:12]))
-                    return int(''.join(nums[:12]))
-                break
-            if nums[j] > nums[hi]:
-                hi = j
-        while hi != i and windowSize > 1:
-            nums.pop(i)
-            windowSize -= 1
-            hi -= 1
-        
-        i += 1
-    
-    return int(''.join(nums))
+toRemove = [[0,0]]
+while toRemove:
+  toRemove = []
+  for i in range(len(grid)):
+      for j in range(len(grid[0])):
+          if grid[i][j] == '@' and checkSurroundings(i, j, len(grid), len(grid[0])):
+              toRemove.append([i, j])
+              total += 1
 
-for line in grid:
-    total += part2(line)
-    # print(total)
+  for pair in toRemove:
+      grid[pair[0]][pair[1]] = '.'
+
 
 result(total)
