@@ -36,20 +36,6 @@ grid = []
 for line in array:
     to_grid(grid, line, False)
 
-from collections import Counter
-paths = Counter()
-
-for line in grid:
-    for i, c in enumerate(line):
-        if c == 'S':
-            paths[i] = 1
-        elif c== '^' and i in paths:
-            paths[i+1] += paths[i]
-            paths[i-1] += paths[i]
-            del paths[i]
-    print(paths)
-
-total = paths.total()
-
+print_grid(grid)
 
 result(total)
