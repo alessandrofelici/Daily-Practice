@@ -11,24 +11,16 @@ class Solution:
         if not node:
             return
         
-        visited = set()
+        copied = {}
 
-        def bfs(node: Optional['Node']):
-            copy = Node(node.val)
-            q = collections.deque()
+        def dfs(node: Optional['Node']):
+            copied[node] = Node(node.val)
 
             for v in node.neighbors:
-                if v not in visited:
-                    visited.add(v)
-                    q.append(v)
-
-            while q:
-                neighbor = bfs(q.popleft())
-                copy.neighbors.append(neighbor)
-                neighbor.neighbors.append(copy)
+                if v not in copied:
+                    copied[v] = dfs(v)
+                copied[node].neighbors.append(copied[v])
             
-            return copy
+            return copied[node]
 
-        visited.add(node)
-
-        return bfs(node)
+        return dfs(node)
